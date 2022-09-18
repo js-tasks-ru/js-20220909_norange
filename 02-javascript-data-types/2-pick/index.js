@@ -8,7 +8,8 @@ export const pick = (obj, ...fields) => {
   const resultObj = {};
 
   for (const field of fields) {
-    if (Object.hasOwn(obj, field)) {
+    // Usage of 'hasOwn' breaks github tests
+    if (Object.prototype.hasOwnProperty.call(obj, field)) {
       resultObj[field] = obj[field];
     }
   }
