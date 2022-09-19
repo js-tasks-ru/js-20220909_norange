@@ -8,10 +8,14 @@ export function createGetter(path) {
 
   return function (obj) {
     let currentResult = obj;
-    while (props.length && currentResult) {
-      const nextProp = props.shift();
-      currentResult = currentResult[nextProp];
+
+    for (const prop of props) {
+      currentResult = currentResult[prop];
+      if (!currentResult) {
+        break;
+      }
     }
+
     return currentResult;
   };
 }
