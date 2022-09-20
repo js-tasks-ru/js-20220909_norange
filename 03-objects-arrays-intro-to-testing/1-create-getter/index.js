@@ -11,7 +11,7 @@ export function createGetter(path) {
 
     for (const prop of props) {
       currentResult = currentResult[prop];
-      if (!currentResult) {
+      if (currentResult === undefined) {
         break;
       }
     }
