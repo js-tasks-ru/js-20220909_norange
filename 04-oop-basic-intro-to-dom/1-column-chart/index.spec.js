@@ -1,4 +1,4 @@
-import ColumnChart from '../solution/index.js';
+import ColumnChart from './index.js';
 
 describe('oop-basic-intro-to-dom/column-chart', () => {
   let columnChart;
@@ -62,7 +62,7 @@ describe('oop-basic-intro-to-dom/column-chart', () => {
 
   it('should have ability to define "formatHeading" function', () => {
     const formatHeading = data => `USD ${data}`;
-    const value = 100;
+    const value = 100000;
 
     columnChart = new ColumnChart({ formatHeading, value });
     const columnLink = columnChart.element.querySelector('.column-chart__header');
