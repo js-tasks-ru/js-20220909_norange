@@ -102,11 +102,9 @@ export default class ColumnChart {
 
     if (chart) {
       chart.innerHTML = it.createChartHtml();
+      it.element.classList.remove("column-chart_loading");
 
-      if (
-        !data.length &&
-        !it.element.classList.contains("column-chart_loading")
-      ) {
+      if (!data.length) {
         it.element.classList.add("column-chart_loading");
       }
     }
