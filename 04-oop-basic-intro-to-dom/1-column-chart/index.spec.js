@@ -62,7 +62,7 @@ describe('oop-basic-intro-to-dom/column-chart', () => {
 
   it('should have ability to define "formatHeading" function', () => {
     const formatHeading = data => `USD ${data}`;
-    const value = 100000;
+    const value = 100;
 
     columnChart = new ColumnChart({ formatHeading, value });
     const columnLink = columnChart.element.querySelector('.column-chart__header');

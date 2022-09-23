@@ -1,40 +1,31 @@
-const defaultProps = {
-  data: [],
-  label: "value",
-  value: 0,
-  link: null,
-  formatHeading: (data) => data,
-};
-
 export default class ColumnChart {
+  defaultProps = {
+    data: [],
+    label: "value",
+    value: 0,
+    link: null,
+    formatHeading: (data) => data,
+  };
+
+  chartHeight = 50;
+
   constructor(props) {
     const it = this;
 
     it.props = {
-      ...defaultProps,
+      ...it.defaultProps,
       ...props,
     };
 
-    it.chartHeight = 50;
-
     it.createElement();
-  }
-
-  // example at https://column-chart-skeleton.glitch.me/ shows formatted numbers
-  // but we already have an option to define formatter in props
-  // so not sure if i should use this function ot not
-  formatNumber(num) {
-    return num.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
   }
 
   createLinkHtml() {
     const it = this;
 
-    if (it.props.link) {
-      return `<a href="/${it.props.link}" class="column-chart__link">View all</a>`;
-    } else {
-      return "";
-    }
+    return it.props.link
+      ? `<a href="/${it.props.link}" class="column-chart__link">View all</a>`
+      : "";
   }
 
   createChartHtml() {
@@ -58,7 +49,7 @@ export default class ColumnChart {
     `;
   }
 
-  createElement() {
+  createElementHtml() {
     const it = this;
 
     const heading = it.props.formatHeading(it.props.value);
@@ -69,7 +60,7 @@ export default class ColumnChart {
       classes.push("column-chart_loading");
     }
 
-    const templateHtml = `
+    return `
       <div class="${classes.join(" ")}" 
       style="--chart-height: ${it.chartHeight}">
         <div class="column-chart__title">
@@ -84,6 +75,12 @@ export default class ColumnChart {
         </div>
       </div>
     `;
+  }
+
+  createElement() {
+    const it = this;
+
+    const templateHtml = it.createElementHtml();
 
     const wrap = document.createElement("div");
     wrap.innerHTML = templateHtml.trim();
@@ -93,10 +90,7 @@ export default class ColumnChart {
   update(data) {
     const it = this;
 
-    it.props = {
-      ...it.props,
-      data: data,
-    };
+    it.props.data = data;
 
     const chart = it.element.querySelector(".column-chart__chart");
 
@@ -113,10 +107,15 @@ export default class ColumnChart {
   remove() {
     const it = this;
 
-    it.element.remove();
+    if (it.element) {
+      it.element.remove();
+    }
   }
 
   destroy() {
-    // not sure what to do in this method, but tests need it to function properly
+    const it = this;
+
+    it.remove();
+    it.element = null;
   }
 }
