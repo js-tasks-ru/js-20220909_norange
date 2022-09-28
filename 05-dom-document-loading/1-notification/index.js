@@ -1,6 +1,6 @@
 export default class NotificationMessage {
+  static activeNotification;
   timeout = null;
-  eventListeners = {};
 
   constructor(message = "", { duration = 2000, type = "success" } = {}) {
     this.message = message;
@@ -8,14 +8,11 @@ export default class NotificationMessage {
     this.type = type;
 
     this.createElement();
-    this.initEventListeners();
   }
 
   createMessageHtml() {
     return `
-    <div class="notification ${this.type}" style="--value:${
-      this.duration / 1000
-    }s">
+    <div class="notification ${this.type}" style="--value:${this.duration / 1000}s">
       <div class="timer"></div>
       <div class="inner-wrapper">
         <div class="notification-header">success</div>
@@ -27,32 +24,6 @@ export default class NotificationMessage {
     `;
   }
 
-  initEventListeners() {
-    this.eventListeners = {
-      onNotificationShow: this.onNotificationShow.bind(this),
-    };
-
-    document.body.addEventListener(
-      "notification-show",
-      this.eventListeners.onNotificationShow
-    );
-  }
-
-  removeEventListeners() {
-    document.body.removeEventListener(
-      "notification-show",
-      this.eventListeners.onNotificationShow
-    );
-
-    this.eventListeners = {};
-  }
-
-  onNotificationShow(event) {
-    if (event.target !== this.element) {
-      this.destroy();
-    }
-  }
-
   createElement() {
     const templateHtml = this.createMessageHtml();
     const wrap = document.createElement("div");
@@ -60,16 +31,15 @@ export default class NotificationMessage {
     this.element = wrap.firstChild;
   }
 
-  show(element) {
-    const parent = element || document.querySelector("body");
-
-    this.clearTimer();
-    this.remove();
+  show(parent = document.body) {
+    if (NotificationMessage.activeNotification) {
+      NotificationMessage.activeNotification.remove();
+    }
 
     parent.append(this.element);
-
-    this.triggerShowEvent();
     this.startTimer();
+
+    NotificationMessage.activeNotification = this;
   }
 
   triggerShowEvent() {
@@ -102,7 +72,6 @@ export default class NotificationMessage {
 
   destroy() {
     this.remove();
-    this.removeEventListeners();
     this.element = null;
   }
 }
