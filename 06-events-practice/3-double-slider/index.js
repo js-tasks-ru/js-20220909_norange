@@ -4,13 +4,14 @@
 export default class DoubleSlider {
   currentPercentFrom = 0
   currentPercentTo = 100
-  realMin
-  realMax
+  currentMin
+  currentMax
   currentThumb
   subElements = {}
   sliderBounds = {
     left: null,
     right: null,
+    width: null
   }
 
   constructor({min, max, selected, formatValue = value => '$' + value}) {
@@ -74,6 +75,8 @@ export default class DoubleSlider {
   removeListeners() {
     this.subElements.leftSlider.removeEventListener('pointerdown', this.onDragStart);
     this.subElements.rightSlider.removeEventListener('pointerdown', this.onDragStart);
+    document.removeEventListener('pointermove', this.onDragMove);
+    document.removeEventListener('pointerup', this.onDragEnd);
   }
 
   onDragStart = (event) => {
@@ -128,8 +131,8 @@ export default class DoubleSlider {
   }
 
   usePresetValues(min, max) {
-    this.realMin = min;
-    this.realMax = max;
+    this.currentMin = min;
+    this.currentMax = max;
 
     this.currentPercentFrom = (min - this.min) / this.min * 100;
     this.currentPercentTo = 100 - ((this.max - max) / this.min * 100);
@@ -139,8 +142,8 @@ export default class DoubleSlider {
   }
 
   updateSlider(min, max) {
-    this.realMin = min || Math.floor(this.min + this.min * this.currentPercentFrom / 100);
-    this.realMax = max || Math.floor(this.max - (100 - this.min * this.currentPercentTo / 100));
+    this.currentMin = min || Math.floor(this.min + this.min * this.currentPercentFrom / 100);
+    this.currentMax = max || Math.floor(this.max - (100 - this.min * this.currentPercentTo / 100));
 
     this.updateTextValues();
     this.updateThumbs();
@@ -148,8 +151,8 @@ export default class DoubleSlider {
   }
 
   updateTextValues() {
-    this.subElements.from.textContent = this.formatValue(this.realMin);
-    this.subElements.to.textContent = this.formatValue(this.realMax);
+    this.subElements.from.textContent = this.formatValue(this.currentMin);
+    this.subElements.to.textContent = this.formatValue(this.currentMax);
   }
 
   updateThumbs() {
@@ -162,7 +165,7 @@ export default class DoubleSlider {
 
   emitChange() {
     this.element.dispatchEvent(new CustomEvent("range-select", {
-      detail: { from: this.realMin, to: this.realMax }
+      detail: { from: this.currentMin, to: this.currentMax }
     }));
   }
 

@@ -10,10 +10,10 @@ export default class SortableTable {
     this.data = [...data];
 
     if (sorted.id && sorted.order) {
-      this.sort(sorted.id, sorted.order);
-    } else {
-      this.createElement();
-    }
+      this.sort(sorted.id, sorted.order, false);
+    } 
+
+    this.createElement();
   }
 
   initListeners() {
@@ -166,7 +166,7 @@ export default class SortableTable {
     // to be done
   }
 
-  sort(fieldId, order) {
+  sort(fieldId, order, createEl = true) {
     if (!fieldId || !order) {return;}
 
     this.sortField = fieldId;
@@ -178,7 +178,9 @@ export default class SortableTable {
       this.sortOnServer();
     }
 
-    this.createElement();
+    if (createEl) {
+      this.createElement();
+    }
   }
 
   compareStrings = (string1, string2) => {
