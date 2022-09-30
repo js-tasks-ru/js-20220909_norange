@@ -144,6 +144,7 @@ export default class DoubleSlider {
 
     this.updateTextValues();
     this.updateThumbs();
+    this.emitChange();
   }
 
   updateTextValues() {
@@ -157,6 +158,12 @@ export default class DoubleSlider {
 
     this.subElements.progressBar.style.left = `${this.currentPercentFrom}%`;
     this.subElements.progressBar.style.right = `${100 - this.currentPercentTo}%`;
+  }
+
+  emitChange() {
+    this.element.dispatchEvent(new CustomEvent("range-select", {
+      detail: { from: this.realMin, to: this.realMax }
+    }));
   }
 
   remove() {
