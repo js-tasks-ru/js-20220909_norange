@@ -3,6 +3,7 @@ export default class SortableTable {
   sortOrder = null;
   element = null;
   subElements = {}
+  isSortLocally = true
 
   constructor(headerConfig = [], { data = [], sorted = null }) {
     this.headerConfig = headerConfig;
@@ -131,7 +132,7 @@ export default class SortableTable {
     this.initListeners();
   }
 
-  sortData() {
+  sortOnClient() {
     const sortType = this.headerConfig.find(
       (item) => item.id === this.sortField
     ).sortType;
@@ -161,13 +162,22 @@ export default class SortableTable {
     });
   }
 
+  sortOnServer() {
+    // to be done
+  }
+
   sort(fieldId, order) {
     if (!fieldId || !order) {return;}
 
     this.sortField = fieldId;
     this.sortOrder = order;
 
-    this.sortData();
+    if (this.isSortLocally) {
+      this.sortOnClient();
+    } else {
+      this.sortOnServer();
+    }
+
     this.createElement();
   }
 
