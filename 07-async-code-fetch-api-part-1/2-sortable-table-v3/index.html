@@ -55,7 +55,12 @@
   ];
 
   const sortableTable = new SortableTable(header, {
-    url: 'api/rest/products'
+    url: 'api/rest/products',
+    // isSortLocally: true,
+    // sorted: {
+    //     id: 'title',
+    //     order: 'asc'
+    //   }
   });
 
   root.append(sortableTable.element);
