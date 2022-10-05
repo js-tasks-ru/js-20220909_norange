@@ -22,6 +22,11 @@ class Tooltip {
     document.addEventListener('pointerover', this.onPointerOver);
   }
 
+  remoreListeners() {
+    document.removeEventListener('pointerover', this.onPointerOver);
+    document.removeEventListener('pointermove', this.onMouseMove);
+  }
+
   onPointerOver = (event) => {
     if (event.defaultPrevented) {
       return;
@@ -64,7 +69,7 @@ class Tooltip {
   }
 
   remove() {
-    document.removeEventListener('pointermove', this.onMouseMove);
+    this.remoreListeners();
 
     if (this.activeEl) {
       this.activeEl.removeEventListener('pointerout', this.onPointerOut);
@@ -81,7 +86,7 @@ class Tooltip {
 
   destroy() {
     this.remove();
-    document.removeEventListener('pointerover', this.onPointerOver);
+    this.remoreListeners();
   }
 }
 

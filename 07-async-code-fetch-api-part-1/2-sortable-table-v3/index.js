@@ -22,7 +22,7 @@ export default class SortableTable {
       this.sortOrder = sorted.order;
     }
 
-    this.fetchUrl = `${BACKEND_URL}/${url}`;
+    this.fetchUrl = new URL(`${BACKEND_URL}/${url}`);
     this.isSortLocally = isSortLocally;
 
     this.createElement();
@@ -31,7 +31,9 @@ export default class SortableTable {
   }
 
   initScrollListeners() {
-    window.addEventListener('scroll', this.onPageScroll);
+    if (!this.isSortLocally) {
+      window.addEventListener('scroll', this.onPageScroll);
+    }
   }
 
   removeScrollListeners() {
@@ -200,10 +202,6 @@ export default class SortableTable {
   async loadExtraData() {
     if (this.noMoreDataToLoad) {return;}
 
-    if (this.isSortLocally) {
-      // ...not sure about this logic, added question in discord
-    }
-
     this.startIndex += this.itemsPerUpload;
     this.endIndex += this.itemsPerUpload;
 
@@ -216,7 +214,6 @@ export default class SortableTable {
 
     this.data = this.data.concat(data);
     this.renderExtraItems(data);
-    
   }
 
   async loadData() {

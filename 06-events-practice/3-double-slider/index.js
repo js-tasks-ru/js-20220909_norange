@@ -82,10 +82,12 @@ export default class DoubleSlider {
   onDragStart = (event) => {
     this.currentThumb = event.target;
 
+    const { left, right, width } = this.subElements.innerBounds.getBoundingClientRect();
+
     this.sliderBounds = {
-      left: this.subElements.innerBounds.getBoundingClientRect().left,
-      right: this.subElements.innerBounds.getBoundingClientRect().right,
-      width: this.subElements.innerBounds.getBoundingClientRect().width,
+      left,
+      right,
+      width,
     };
 
     document.addEventListener('pointermove', this.onDragMove);

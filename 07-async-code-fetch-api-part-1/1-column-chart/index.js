@@ -19,7 +19,7 @@ export default class ColumnChart {
   value = 0
   subElements = {}
 
-  constructor(props) {
+  constructor(props = {}) {
     this.props = {
       ...this.defaultProps,
       ...props,
@@ -95,8 +95,6 @@ export default class ColumnChart {
 
   getSubElements() {
     const elements = this.element.querySelectorAll('[data-element]');
-
-    this.subElements = {};
 
     for (const element of elements) {
       const name = element.dataset.element;

@@ -21,7 +21,7 @@ export default class SortableTable {
   }
 
   removeListeners() {
-    this.subElements.header.removeEventListener('pointerdown', this.onHeaderClick);
+    
   }
 
   onHeaderClick = (event) => {
