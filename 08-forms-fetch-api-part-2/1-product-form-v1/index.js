@@ -13,6 +13,7 @@ export default class ProductForm {
     CREATE: 'create',
     EDIT: 'edit'
   }
+  images = []
 
   constructor (productId) {
     this.productId = productId;
@@ -47,6 +48,7 @@ export default class ProductForm {
 
     const data = await fetchJson(url);
     this.existingProduct = data[0];
+    this.images = this.existingProduct.images;
   }
 
   initListeners() {
@@ -66,8 +68,7 @@ export default class ProductForm {
   async createProduct() {
     const url = new URL(`${BACKEND_URL}/api/rest/products`);
 
-    const formData = new FormData(this.subElements.productForm);
-    const data = Object.fromEntries(formData);
+    const data = this.getFormData();
 
     const responseData = await fetchJson(url, {
       method: 'PUT',
@@ -83,8 +84,7 @@ export default class ProductForm {
   async save() {
     const url = new URL(`${BACKEND_URL}/api/rest/products`);
 
-    const formData = new FormData(this.subElements.productForm);
-    const data = Object.fromEntries(formData);
+    const data = this.getFormData();
 
     const responseData = await fetchJson(url, {
       method: 'PATCH',
@@ -95,6 +95,19 @@ export default class ProductForm {
     });
 
     this.element.dispatchEvent(new CustomEvent("product-updated"));
+  }
+
+  getFormData() {
+    const formData = new FormData(this.subElements.productForm);
+
+    // Удяляем картинки
+    formData.delete('url');
+    formData.delete('source');
+
+    const data = Object.fromEntries(formData);
+    data.images = this.images;
+
+    return data;
   }
 
   createElement() {
