@@ -18,7 +18,7 @@ export default class RangePicker {
     this.setInitialData(from, to);
     this.createElement();
     this.initListeners();
-    this.setDateRange(this.startDate, this.endDate);
+    this.setDateRange(this.startDate, this.endDate, true);
   }
 
   setInitialData(from, to) {
@@ -59,7 +59,7 @@ export default class RangePicker {
     this.startDate = sameDatePrevMonth;
   }
 
-  setDateRange(date1, date2, closeCalendar = true) {
+  setDateRange(date1, date2, silent = false) {
     if (!date1 || !date2) return;
 
     if (date1 > date2) {
@@ -74,9 +74,14 @@ export default class RangePicker {
     this.subElements.to.textContent = this.endDate.toLocaleDateString();
 
     this.setDaysClasses();
+    this.closeCalendar();
 
-    if (closeCalendar) {
-      this.closeCalendar();
+    if (!silent) {
+      this.element.dispatchEvent(
+        new CustomEvent("date-select", {
+          detail: { from: this.startDate, to: this.endDate },
+        })
+      );
     }
   }
 
