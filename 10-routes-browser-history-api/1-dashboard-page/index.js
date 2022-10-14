@@ -51,6 +51,10 @@ export default class Page {
     document.addEventListener("date-select", this.onDateSelect);
   }
 
+  removeListeners() {
+    document.removeEventListener("date-select", this.onDateSelect);
+  }
+
   onDateSelect = (event) => {
     const { from, to } = event.detail;
 
@@ -102,14 +106,22 @@ export default class Page {
 
   renderComponents() {
     this.subElements.rangePicker.replaceWith(this.rangePicker.element);
-    this.subElements.ordersChart.replaceWith(this.ordersChart.element);
-    this.subElements.salesChart.replaceWith(this.salesChart.element);
-    this.subElements.customersChart.replaceWith(this.customersChart.element);
-    this.subElements.sortableTable.replaceWith(this.productsTable.element);
+    this.subElements.rangePicker = this.rangePicker.element;
 
-    this.ordersChart.element.classList.add("dashboard__chart_orders");
-    this.salesChart.element.classList.add("dashboard__chart_sales");
-    this.customersChart.element.classList.add("dashboard__chart_customers");
+    this.subElements.ordersChart.replaceWith(this.ordersChart.element);
+    this.subElements.ordersChart = this.ordersChart.element;
+    this.subElements.ordersChart.classList.add("dashboard__chart_orders");
+
+    this.subElements.salesChart.replaceWith(this.salesChart.element);
+    this.subElements.salesChart = this.salesChart.element;
+    this.subElements.salesChart.classList.add("dashboard__chart_sales");
+
+    this.subElements.customersChart.replaceWith(this.customersChart.element);
+    this.subElements.customersChart = this.customersChart.element;
+    this.subElements.customersChart.classList.add("dashboard__chart_customers");
+
+    this.subElements.sortableTable.replaceWith(this.productsTable.element);
+    this.subElements.sortableTable = this.productsTable.element;
   }
 
   getSubElements() {
@@ -124,5 +136,21 @@ export default class Page {
       const name = element.dataset.element;
       this.subElements[name] = element;
     }
+  }
+
+  remove() {
+    this.element && this.element.remove();
+    this.element = null;
+    this.subElements = {};
+    this.removeListeners();
+  }
+
+  destroy() {
+    this.remove();
+    this.ordersChart.destroy();
+    this.salesChart.destroy();
+    this.customersChart.destroy();
+    this.rangePicker.destroy();
+    this.productsTable.destroy();
   }
 }

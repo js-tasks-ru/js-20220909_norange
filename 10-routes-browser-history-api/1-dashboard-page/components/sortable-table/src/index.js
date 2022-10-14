@@ -47,12 +47,13 @@ export default class SortableTable {
 
     const { id, order } = this.sorted;
     const data = await this.loadData(id, order, this.start, this.end);
+    this.data = data;
 
     if (this.sortOnClient) {
-      this.data = data;
       this.sortOnClient(this.sorted.id, this.sorted.order);
+      this.updateElementClasses();
     } else {
-      this.addRows(data);
+      this.renderRows(this.data);
     }
   }
 
@@ -272,8 +273,14 @@ export default class SortableTable {
 
   renderRows(data) {
     if (data.length) {
-      this.element.classList.remove("sortable-table_empty");
       this.addRows(data);
+    }
+    this.updateElementClasses();
+  }
+
+  updateElementClasses() {
+    if (this.data.length) {
+      this.element.classList.remove("sortable-table_empty");
     } else {
       this.element.classList.add("sortable-table_empty");
     }
