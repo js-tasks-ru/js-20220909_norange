@@ -118,43 +118,33 @@ export default class ProductForm {
   onFormSubmit = (event) => {
     event.preventDefault();
 
-    if (this.mode === this.modes.CREATE) {
-      this.createProduct();
-    } else {
-      this.save();
-    }
+    this.save();
   };
-
-  async createProduct() {
-    const url = new URL(`${BACKEND_URL}/api/rest/products`);
-
-    const data = this.getFormData();
-
-    const responseData = await fetchJson(url, {
-      method: "PUT",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    this.element.dispatchEvent(new CustomEvent("product-created"));
-  }
 
   async save() {
     const url = new URL(`${BACKEND_URL}/api/rest/products`);
-
     const data = this.getFormData();
 
-    const responseData = await fetchJson(url, {
-      method: "PATCH",
+    let method;
+    let successEvent;
+
+    if (this.mode === this.modes.CREATE) {
+      method = "PUT";
+      successEvent = "product-created";
+    } else {
+      method = "PATCH";
+      successEvent = "product-updated";
+    }
+
+    await fetchJson(url, {
+      method: method,
       body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
       },
     });
 
-    this.element.dispatchEvent(new CustomEvent("product-updated"));
+    this.element.dispatchEvent(new CustomEvent(successEvent));
   }
 
   getFormData() {
@@ -296,8 +286,8 @@ export default class ProductForm {
       ${subcategories
         .map(
           (subcategory) => `
-        <option value="${subcategory.id}">${category.title} > ${subcategory.title}</option>
-      `
+            <option value="${subcategory.id}">${category.title} > ${subcategory.title}</option>
+          `
         )
         .join("")}
     `;

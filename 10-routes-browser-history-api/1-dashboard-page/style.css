@@ -178,6 +178,7 @@
 }
 
 .progress-bar {
+  display: none;
   background-color: var(--grey);
   box-shadow: none;
   position: fixed;
